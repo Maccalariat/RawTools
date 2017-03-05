@@ -1,0 +1,15 @@
+
+#include "stdafx.h"
+
+#include "RawTools.h"
+
+#include <iostream>
+#include <memory>
+
+int main() {
+  std::cout << "started test" << std::endl;
+  RawTools* rt = new RawTools();
+  rt->processBlock->filename.assign("E:\\projects\\cpp\\rawTools\\sony1.ARW");
+  rt->getMetaData();
+  rt->getBeyer();
+}
