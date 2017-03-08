@@ -1,0 +1,4 @@
+E:/projects/CPP/RawTools/cmake-build-debug/RawToolsTest/Debug/bin/RawToolsTest.exe
+E:/projects/CPP/RawTools/cmake-build-debug/RawToolsLib/Debug/lib/libRawToolsLib.a
+E:/projects/CPP/RawTools/cmake-build-debug/RawToolsLib/Debug/include/RawTools.h
+E:/projects/CPP/RawTools/cmake-build-debug/RawToolsLib/Debug/lib/RawToolsLib-config.cmake

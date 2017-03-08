@@ -1,0 +1,2 @@
+ToolSet: w64 4.0@D:\TDM-GCC-64
+CMake: 3.7.2@D:\CMake\bin\cmake.exe

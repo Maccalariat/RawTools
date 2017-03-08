@@ -1,0 +1,2 @@
+D:\TDM-GCC-64\bin\ar.exe qc libRawToolsLib.a  CMakeFiles/RawToolsLib.dir/FileBuffer.cpp.obj CMakeFiles/RawToolsLib.dir/FileMetaData.cpp.obj CMakeFiles/RawToolsLib.dir/ProcessBlock.cpp.obj CMakeFiles/RawToolsLib.dir/RawImage.cpp.obj CMakeFiles/RawToolsLib.dir/RawTools.cpp.obj CMakeFiles/RawToolsLib.dir/Sony.cpp.obj
+D:\TDM-GCC-64\bin\ranlib.exe libRawToolsLib.a
