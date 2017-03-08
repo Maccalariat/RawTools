@@ -53,7 +53,6 @@ void RawTools::getBeyer( )
             valueD[ ++x ] = 0xFF00 & (val >> offsets[ x ]);
             valueD[ ++x ] = 0xFF00 & (val >> offsets[ x ]);
         }
-
     }
     std::cout << "processed beyer" << std::endl;
 }
