@@ -1,2 +1,0 @@
-/usr/bin/ar qc libRawToolsLib.a  CMakeFiles/RawToolsLib.dir/FileBuffer.cpp.o CMakeFiles/RawToolsLib.dir/FileMetaData.cpp.o CMakeFiles/RawToolsLib.dir/ProcessBlock.cpp.o CMakeFiles/RawToolsLib.dir/RawImage.cpp.o CMakeFiles/RawToolsLib.dir/RawTools.cpp.o CMakeFiles/RawToolsLib.dir/Sony.cpp.o
-/usr/bin/ranlib libRawToolsLib.a

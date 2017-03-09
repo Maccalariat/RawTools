@@ -1,1 +1,0 @@
-/usr/bin/c++   -g   CMakeFiles/RawToolsTest.dir/RawToolsTest.cpp.o  -o RawToolsTest ../RawToolsLib/libRawToolsLib.a 
