@@ -76,7 +76,8 @@ uint32_t FileBuffer::getUint32(const size_t offset) {
 		return fValue;
 		}
 	else {
-		return _byteswap_ulong(fValue);
+		__builtin_bswap32(fValue);
+		// return _byteswap_ulong(fValue);
 		}
 	}
 
