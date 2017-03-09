@@ -1,0 +1,37 @@
+[
+{
+  "directory": "/home/hans/projects/cpp/RawTools/build/RawToolsTest",
+  "command": "/usr/bin/c++    -I/home/hans/projects/cpp/RawTools/RawToolsLib  -g   -std=c++14 -o CMakeFiles/RawToolsTest.dir/RawToolsTest.cpp.o -c /home/hans/projects/cpp/RawTools/RawToolsTest/RawToolsTest.cpp",
+  "file": "/home/hans/projects/cpp/RawTools/RawToolsTest/RawToolsTest.cpp"
+},
+{
+  "directory": "/home/hans/projects/cpp/RawTools/build/RawToolsLib",
+  "command": "/usr/bin/c++     -g   -std=c++14 -o CMakeFiles/RawToolsLib.dir/FileBuffer.cpp.o -c /home/hans/projects/cpp/RawTools/RawToolsLib/FileBuffer.cpp",
+  "file": "/home/hans/projects/cpp/RawTools/RawToolsLib/FileBuffer.cpp"
+},
+{
+  "directory": "/home/hans/projects/cpp/RawTools/build/RawToolsLib",
+  "command": "/usr/bin/c++     -g   -std=c++14 -o CMakeFiles/RawToolsLib.dir/FileMetaData.cpp.o -c /home/hans/projects/cpp/RawTools/RawToolsLib/FileMetaData.cpp",
+  "file": "/home/hans/projects/cpp/RawTools/RawToolsLib/FileMetaData.cpp"
+},
+{
+  "directory": "/home/hans/projects/cpp/RawTools/build/RawToolsLib",
+  "command": "/usr/bin/c++     -g   -std=c++14 -o CMakeFiles/RawToolsLib.dir/ProcessBlock.cpp.o -c /home/hans/projects/cpp/RawTools/RawToolsLib/ProcessBlock.cpp",
+  "file": "/home/hans/projects/cpp/RawTools/RawToolsLib/ProcessBlock.cpp"
+},
+{
+  "directory": "/home/hans/projects/cpp/RawTools/build/RawToolsLib",
+  "command": "/usr/bin/c++     -g   -std=c++14 -o CMakeFiles/RawToolsLib.dir/RawImage.cpp.o -c /home/hans/projects/cpp/RawTools/RawToolsLib/RawImage.cpp",
+  "file": "/home/hans/projects/cpp/RawTools/RawToolsLib/RawImage.cpp"
+},
+{
+  "directory": "/home/hans/projects/cpp/RawTools/build/RawToolsLib",
+  "command": "/usr/bin/c++     -g   -std=c++14 -o CMakeFiles/RawToolsLib.dir/RawTools.cpp.o -c /home/hans/projects/cpp/RawTools/RawToolsLib/RawTools.cpp",
+  "file": "/home/hans/projects/cpp/RawTools/RawToolsLib/RawTools.cpp"
+},
+{
+  "directory": "/home/hans/projects/cpp/RawTools/build/RawToolsLib",
+  "command": "/usr/bin/c++     -g   -std=c++14 -o CMakeFiles/RawToolsLib.dir/Sony.cpp.o -c /home/hans/projects/cpp/RawTools/RawToolsLib/Sony.cpp",
+  "file": "/home/hans/projects/cpp/RawTools/RawToolsLib/Sony.cpp"
+}
+]

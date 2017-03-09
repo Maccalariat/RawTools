@@ -1,3 +1,0 @@
-E:/projects/CPP/RawTools/rawToolsTest/build/CMakeFiles/rawToolsTest.dir
-E:/projects/CPP/RawTools/rawToolsTest/build/CMakeFiles/ALL_BUILD.dir
-E:/projects/CPP/RawTools/rawToolsTest/build/CMakeFiles/ZERO_CHECK.dir
