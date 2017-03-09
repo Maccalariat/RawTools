@@ -4,16 +4,19 @@
         {
             "name": "C++ Launch",
             "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceRoot}/cmake-build/RawToolsTest/RawToolsTest.exe",
-            "miDebuggerPath": "gdb.exe",
+            "request": "launch",            
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",
             "environment": [],
             "externalConsole": true,
+//          ----------            
             "linux": {
                 "MIMode": "gdb",
+                "program": "${workspaceRoot}/build/RawToolsTest/RawToolsTest",
+                "args": [
+                        "${workspaceRoot}/sony1.ARW"
+                ],
                 "setupCommands": [
                     {
                         "description": "Enable pretty-printing for gdb",
@@ -22,11 +25,18 @@
                     }
                 ]
             },
+//          ----------
             "osx": {
                 "MIMode": "lldb"
             },
+//          ----------            
             "windows": {
                 "MIMode": "gdb",
+                "program": "${workspaceRoot}/build/RawToolsTest/RawToolsTest.exe",
+                "miDebuggerPath": "gdb.exe",
+                "args": [
+                    "E:\\projects\\cpp\\rawTools\\sony1.ARW"
+                ],
                 "setupCommands": [
                     {
                         "description": "Enable pretty-printing for gdb",
