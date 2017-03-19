@@ -1,5 +1,7 @@
 #include "RawTools.h"
-
+#include "FileMetaData.h"
+#include "ProcessBlock.h"
+#include "FileBuffer.h"
 
 RawTools::RawTools( )
 {

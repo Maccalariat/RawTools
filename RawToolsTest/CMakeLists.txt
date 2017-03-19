@@ -1,7 +1,7 @@
 # RawToolsTest
 cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
 
-message(" cmake - RawToolsTest")
+message("cmake - RawToolsTest")
 
 project(RawToolsTest CXX)
 

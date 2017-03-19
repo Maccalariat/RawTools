@@ -1,8 +1,9 @@
-#pragma once
-#include <iostream>
-#include "FileMetaData.h"
-#include "ProcessBlock.h"
-#include "FileBuffer.h"
+//
+// Created by Hans on 17/03/2017.
+//
+
+#ifndef PROJECT__RAWTOOLS_H_H
+#define PROJECT__RAWTOOLS_H_H
 
 class RawTools {
 	/// the public API for RawTools
@@ -13,20 +14,19 @@ class RawTools {
 	/// 3. getInterpolated (this interpolates the image)
 public:
 	//////
-	ProcessBlock* processBlock;
-	RawTools();
+	RawToolsImpl();
 	void getMetaData();
 	void getBeyer();
 	void getInterpolated();
 	void getPostProcesed();
-	~RawTools();
+	~RawToolsImpl();
 
 private:
-	///////
-	FileBuffer* _fileBuffer;
-	FileMetaData* _fileMetaData;
-	void log(std::string message);
-	std::vector<uint16_t>beyerMatrix;
-		
-
+///////
+FileBuffer *_fileBuffer;
+FileMetaData *_fileMetaData;
+void log(std::string message);
+std::vector<uint16_t> beyerMatrix;
 };
+
+#endif //PROJECT__RAWTOOLS_H_H
