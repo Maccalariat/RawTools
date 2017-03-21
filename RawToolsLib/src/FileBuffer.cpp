@@ -1,4 +1,4 @@
-#include "FileBuffer.h"
+#include "FileBuffer.hpp"
 
 FileBuffer::FileBuffer(ProcessBlock &processBlock) {
 
