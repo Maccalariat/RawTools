@@ -1,15 +1,13 @@
 #include "FileMetaData.hpp"
 
 
-FileMetaData::FileMetaData(FileBuffer& fileBuffer, ProcessBlock& processBlock) :
-	_pb(processBlock),
+FileMetaData::FileMetaData(FileBuffer& fileBuffer) :
 	_fileBuffer(fileBuffer) {
 	std::cout << "in FileMetaData constructor" << std::endl;
 
 	if (fileBuffer.memoryFile[2] != 0x2A) {
 		// bad magic number
-		processBlock.statusCode = processBlock.Broken;
-		processBlock.statusMessage = "bad magic number in file";
+		std::cout << "bad magic number in file" << std::endl;
 		return;
 		}
 	parseFile();
@@ -82,14 +80,14 @@ void FileMetaData::processDE(const size_t offset, tiff_ifd_s& ifd) {
 			case 23:
 				{
 				if (tag_type == 3) {
-					_pb.iso_speed = tag_value_offset;
+					iso_speed = tag_value_offset;
 					}
 				}
 				break;
 			case 28: case 29: case 30:
 				{
-				_pb.cblack.at(tag - 28) = tag_value_offset;
-				_pb.cblack.at(3) = _pb.cblack.at(1);
+				cblack.at(tag - 28) = tag_value_offset;
+				cblack.at(3) = cblack.at(1);
 				}
 				break;
 			case 36:
@@ -107,8 +105,8 @@ void FileMetaData::processDE(const size_t offset, tiff_ifd_s& ifd) {
 			case 61443:
 				ifd.samples = tag_count & 7;
 				ifd.bps = tag_value_offset;
-				if (_pb.tiff_bps < ifd.bps) {
-					_pb.tiff_bps = ifd.bps;
+				if (tiff_bps < ifd.bps) {
+					tiff_bps = ifd.bps;
 					}
 				break;
 			case 0x103:   // compression
@@ -116,19 +114,19 @@ void FileMetaData::processDE(const size_t offset, tiff_ifd_s& ifd) {
 				break;
 			case 0X10E:
 				{
-				_pb.imageDescription.assign(_fileBuffer.memoryFile.begin() + tag_value_offset,
+				imageDescription.assign(_fileBuffer.memoryFile.begin() + tag_value_offset,
 											_fileBuffer.memoryFile.begin() + tag_value_offset + tag_count);
 				}
 				break;
 			case 0X10F:
 				{
-				_pb.make.assign(_fileBuffer.memoryFile.begin() + tag_value_offset,
+				make.assign(_fileBuffer.memoryFile.begin() + tag_value_offset,
 								_fileBuffer.memoryFile.begin() + tag_value_offset + tag_count);
 				}
 				break;
 			case 0x110:
 				{
-				_pb.model.assign(_fileBuffer.memoryFile.begin() + tag_value_offset,
+				model.assign(_fileBuffer.memoryFile.begin() + tag_value_offset,
 								 _fileBuffer.memoryFile.begin() + tag_value_offset + tag_count);
 				}
 				break;
@@ -163,20 +161,20 @@ void FileMetaData::processDE(const size_t offset, tiff_ifd_s& ifd) {
 					!software.compare(0, 6, "Bibble") ||
 					!software.compare(0, 10, "Nikon Scan") ||
 					!software.compare(0, 26, "Digital Photo Professional")) {
-					_pb.statusCode = _pb.NotRawFile;
+					statusCode = NotRawFile;
 					}
 				}
 				break;
 			case 306:    // DateTime
 				{
-				_pb.timestamp.assign(_fileBuffer.memoryFile.begin() + tag_value_offset,
+				timestamp.assign(_fileBuffer.memoryFile.begin() + tag_value_offset,
 									 _fileBuffer.memoryFile.begin() + tag_value_offset + tag_count);
 				}
 
 				break;
 			case 315:    // artist 
 				{
-				_pb.artist.assign(_fileBuffer.memoryFile.begin() + tag_value_offset,
+				artist.assign(_fileBuffer.memoryFile.begin() + tag_value_offset,
 								  _fileBuffer.memoryFile.begin() + tag_value_offset + tag_count);
 				}
 				break;
@@ -206,8 +204,8 @@ void FileMetaData::processDE(const size_t offset, tiff_ifd_s& ifd) {
 				}
 				break;
 			case 400:
-				_pb.make.assign("Sarnoff");
-				_pb.maximum = 0xfff;
+				make.assign("Sarnoff");
+				maximum = 0xfff;
 				break;
 			case 0x700: {
 				ifd.sonyRawFileType = tag_value_offset;
@@ -224,13 +222,13 @@ void FileMetaData::processDE(const size_t offset, tiff_ifd_s& ifd) {
 						*/
 				break;
 			case 29184:
-				_pb.sony_offset = tag_value_offset;
+				sony_offset = tag_value_offset;
 				break;
 			case 29185:
-				_pb.sony_length = tag_value_offset;
+				sony_length = tag_value_offset;
 				break;
 			case 29217:
-				_pb.sony_key = tag_value_offset;
+				sony_key = tag_value_offset;
 				break;
 		};
 	}

@@ -13,8 +13,7 @@ add_library(RawToolsLib SHARED
 		src/FileMetaData.cpp
 		src/FileMetaData.hpp
 		src/ProcessBlock.hpp
-		src/ProcessBlock.cpp
-		src/RawImage.cpp
+        src/RawImage.cpp
 		src/RawImage.hpp
 		src/RawToolsImpl.hpp
 		src/RawTools.cpp

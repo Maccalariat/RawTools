@@ -1,14 +1,12 @@
 #include "FileBuffer.hpp"
 
-FileBuffer::FileBuffer(ProcessBlock &processBlock) {
+FileBuffer::FileBuffer(std::string& fileName) {
 
     std::ifstream inputFile;
 
     // _processBlock = processBlock;
-    inputFile.open(processBlock.filename, std::ios::binary | std::ios::in);
+    inputFile.open(fileName.c_str(), std::ios::binary | std::ios::in);
     if (inputFile.bad()) {
-        processBlock.statusCode = processBlock.OK;
-        processBlock.statusMessage.assign("problem opening the file. Terminal");
         inputFile.close();
         return;
     }
@@ -22,15 +20,13 @@ FileBuffer::FileBuffer(ProcessBlock &processBlock) {
         memoryFile.resize(end);
         inputFile.read((char *) &memoryFile[0], end);
     } else {
-        processBlock.statusCode = processBlock.BadFileName;
-        processBlock.statusMessage.assign("the file has zero length. Terminal");
+        std::cout << "the file has zero length. Terminal" << std::endl;
         inputFile.close();
         return;
     }
 
     inputFile.close();
-    processBlock.bigEndian = getEndian();
-    bigEndian = processBlock.bigEndian;
+    bigEndian = getEndian();
 }
 
 FileBuffer::~FileBuffer() {
