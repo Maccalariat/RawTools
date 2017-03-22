@@ -12,7 +12,7 @@ target_sources(RawToolsTest
         RawToolsTest.cpp)
 
 target_include_directories(RawToolsTest INTERFACE ${CMAKE_SOURCE_DIR}/RawToolsLib/include)
-include_directories(${CMAKE_SOURCE_DIR}/RawToolsLib)
+include_directories(${CMAKE_SOURCE_DIR}/libRawToolsLib)
 
 target_link_libraries(RawToolsTest RawToolsLib)
 
