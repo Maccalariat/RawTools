@@ -4,6 +4,9 @@ cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
 message ("cmake - RawToolsLib")
 
 project(RawToolsLib CXX)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR/include})
 
 add_library(RawToolsLib SHARED

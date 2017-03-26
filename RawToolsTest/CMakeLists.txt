@@ -5,6 +5,8 @@ message("cmake - RawToolsTest")
 
 project(RawToolsTest CXX)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 add_executable(RawToolsTest "")
 
 target_sources(RawToolsTest
