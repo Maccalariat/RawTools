@@ -8,7 +8,11 @@ FileMetaData::FileMetaData(FileBuffer &fileBuffer) : _fileBuffer(fileBuffer) {
     std::cout << "bad magic number in file" << std::endl;
     return;
   }
+  
+  // process the file
+  // TODO: error handling
   parseFile();
+
   // now get the supposed non-scaled image
   for (auto ifd : tiff_ifd) {
     if (ifd.ifd_type == 0) {
