@@ -1,5 +1,6 @@
 #include "../RawToolsLib/include/RawTools.hpp"
 
+
 #include <iostream>
 #include <string>
 int main(int argc, char *argv[]) {
@@ -14,4 +15,5 @@ int main(int argc, char *argv[]) {
     rt->setFile(fn);
     rt->getMetaData();
     rt->getBeyer();
+    rt->writeFile("sony1.tiff");
 }

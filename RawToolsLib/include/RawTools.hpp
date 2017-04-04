@@ -20,6 +20,8 @@ class RawTools {
 	void getBeyer();
 	void getInterpolated();
 	void getPostProcesed();
+    void writeFile(const std::string& fileName);
+
 
 	private:
 	class RawToolsImpl;					// forward declaration

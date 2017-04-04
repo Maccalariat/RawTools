@@ -10,15 +10,20 @@ RawTools::RawTools(RawTools &&) noexcept = default;
 RawTools &RawTools::operator=(RawTools &&) noexcept = default;
 
 // pass through of calls
-void RawTools::setFile(std::string& fileName) {
-    pImpl->setFile( fileName);
+void RawTools::setFile(std::string &fileName)
+{
+    pImpl->setFile(fileName);
 }
 void RawTools::getMetaData()
 {
     pImpl->getMetaData();
 }
-void RawTools::getBeyer() {
+void RawTools::getBeyer()
+{
     pImpl->getBeyer();
+}
+void RawTools::writeFile(const std::string& fileName) {
+    pImpl->writeFile(fileName);
 }
 ///////////////////////////////////////////////////////////////////////////////
 // Implementation Definitions
@@ -27,7 +32,8 @@ void RawTools::getBeyer() {
 RawTools::RawToolsImpl::RawToolsImpl()
 {
 }
-void RawTools::RawToolsImpl::setFile(std::string &fileName) {
+void RawTools::RawToolsImpl::setFile(std::string &fileName)
+{
     _fileName = fileName;
 }
 void RawTools::RawToolsImpl::getMetaData()
@@ -82,6 +88,10 @@ void RawTools::RawToolsImpl::getInterpolated()
 
 void RawTools::RawToolsImpl::getPostProcesed()
 {
+}
+
+void RawTools::RawToolsImpl::writeFile(const std::string& fileName) {
+
 }
 
 void RawTools::RawToolsImpl::log(const std::string message)
