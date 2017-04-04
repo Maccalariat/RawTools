@@ -19,6 +19,7 @@ class RawTools::RawToolsImpl
     void getBeyer();
     void getInterpolated();
     void getPostProcesed();
+    void writeFile(const std::string& fileName);
 
   private:
     ///////
