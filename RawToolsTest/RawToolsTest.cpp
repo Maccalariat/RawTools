@@ -16,4 +16,6 @@ int main(int argc, char *argv[]) {
     rt->getMetaData();
     rt->getBeyer();
     rt->writeFile("sony1.tiff");
+    rt->close_file();
+
 }

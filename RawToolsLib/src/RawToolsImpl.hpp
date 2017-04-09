@@ -8,7 +8,9 @@
 #include "../include/RawTools.hpp"
 #include "FileMetaData.hpp"
 #include "FileBuffer.hpp"
+#include "TiffFile.hpp"
 #include <string>
+#include <memory>
 
 class RawTools::RawToolsImpl
 {
@@ -20,6 +22,7 @@ class RawTools::RawToolsImpl
     void getInterpolated();
     void getPostProcesed();
     void writeFile(const std::string& fileName);
+    void close_file();
 
   private:
     ///////

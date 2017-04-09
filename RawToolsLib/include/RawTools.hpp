@@ -1,7 +1,8 @@
 #ifndef PROJECT_RAWTOOLS_H_H
 #define PROJECT_RAWTOOLS_H_H
 #include <memory>
-	/// the public API for RawTools
+
+/// the public API for RawTools
 	/// This is a 'primitive' collection of atomic api calls on an unsuspecting raw file
 	/// The typical processing sequence is:
 	/// 1. getMetaData (this is required as the first step
@@ -21,6 +22,7 @@ class RawTools {
 	void getInterpolated();
 	void getPostProcesed();
     void writeFile(const std::string& fileName);
+	void close_file();
 
 
 	private:

@@ -17,11 +17,12 @@ add_library(RawToolsLib SHARED
 		src/FileMetaData.hpp
         src/RawImage.cpp
 		src/RawImage.hpp
+        src/RawTools.cpp
 		src/RawToolsImpl.hpp
-		src/RawTools.cpp
 		src/Sony.cpp
 		src/Sony.hpp
-        src/TiffFile.cpp src/TiffFile.hpp)
+        src/TiffFile.cpp
+		src/TiffFile.hpp)
 
 set_target_properties(RawToolsLib PROPERTIES
   CXX_STANDARD 14
