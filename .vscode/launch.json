@@ -7,9 +7,9 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceRoot}/build/RawToolsTest/RawToolsTest",
-            "args": ["sony1.ARW"],
+            "args": ["../../sony1.ARW"],
             "stopAtEntry": false,
-            "cwd": "${workspaceRoot}",
+            "cwd": "${workspaceRoot}/build/RawToolsLib",
             "environment": [],
             "externalConsole": true,
             //////////
@@ -30,7 +30,7 @@
             ///////
             "windows": {
                 "MIMode": "gdb",
-                "miDebuggerPath": "D:/MinGW64/mingw64/bin/gdb.exe",
+                "miDebuggerPath": "D:/MinGW64ToolChain/mingw64/bin/gdb.exe",
                 "setupCommands": [
                     {
                         "description": "Enable pretty-printing for gdb",

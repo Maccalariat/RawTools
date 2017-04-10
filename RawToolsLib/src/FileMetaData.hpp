@@ -19,8 +19,8 @@ private:
     struct tiff_ifd_s {
         size_t file_offset = 0;
         uint16_t ifd_type = 0;
-        int width = 0;
-        int height = 0;
+        uint32_t width = 0;
+        uint32_t height = 0;
         int bps = 0;
         int comp = 0;
         int phint = 0;

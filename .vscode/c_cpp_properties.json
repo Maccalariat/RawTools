@@ -25,7 +25,7 @@
         {
             "name": "Win32",
             "includePath": [
-                "D:/MINGW64/mingw64/lib/gcc/x86_64-w64-mingw32/6.3.0/include/c++"
+                "D:/MINGW64ToolChain/mingw64/lib/gcc/x86_64-w64-mingw32/6.3.0/include/c++"
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,

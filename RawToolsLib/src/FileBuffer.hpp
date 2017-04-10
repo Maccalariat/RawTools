@@ -1,4 +1,6 @@
-#pragma once
+#ifndef PROJECT_FILEBUFFER_HPP
+#define PROJECT_FILEBUFFER_HPP
+
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -18,10 +20,12 @@ class FileBuffer  {
 	uint32_t getUint32(const size_t offset);
 	unsigned char getUChar(const size_t offset);
 
-	std::vector<uint8_t> getBlock(const size_t offset);
+	// std::vector<uint8_t> getBlock(const size_t offset);
 
 	private:
     bool bigEndian;
     bool getEndian();
 
 };
+
+#endif // PROJECT_FILEBUFFER_HPP

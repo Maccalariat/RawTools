@@ -256,5 +256,6 @@ void FileMetaData::processDE(const size_t offset, tiff_ifd_s &ifd)
     case 29217:
         sony_key = tag_value_offset;
         break;
+        default:break;
     };
 }

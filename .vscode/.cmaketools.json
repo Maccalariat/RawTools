@@ -7,6 +7,6 @@
     "description": "Emit debug information without performing optimizations"
   },
   "activeEnvironments": [
-    "MinGW - D:\\MinGW64\\mingw64"
+    "MinGW - D:\\MinGW64ToolChain\\mingw64"
   ]
 }
