@@ -158,7 +158,7 @@ void FileMetaData::processDE(const size_t offset, tiff_ifd_s &ifd)
 					load_flags = 0x2008;
 					*/ // note runs into next case 273 (shit
                                            // code)
-    case 0x0111:                           // strip offsets
+    case 0x0111:                           // strip offsets (actual image data)
         ifd.offset = tag_value_offset;
         break;
     case 0x116: // rows per strip

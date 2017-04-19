@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+
 int main(int argc, char *argv[]) {
     std::cout << "started test" << std::endl;
     if (argv[1] == "") {
@@ -17,5 +18,5 @@ int main(int argc, char *argv[]) {
     rt->getBeyer();
     rt->writeFile("sony1.tiff");
     rt->close_file();
-
+	
 }

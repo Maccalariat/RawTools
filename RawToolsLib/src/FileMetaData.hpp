@@ -27,12 +27,15 @@ private:
         size_t offset = 0;
         int flip = 0;
         int samples = 0;
-        int stripByteCount = 0;
+        uint32_t stripByteCount = 0;
         int tile_width = 0;
         int tile_length = 0;
         float shutter = 0;
         uint32_t sonyRawFileType = 0;
         uint32_t rowsPerStrip = 0;
+        uint32_t xResolution = 0;
+        uint32_t yResolution = 0;
+        uint32_t resolutionUnit = 0;
     };
 
     enum interpolationMethod_e {
