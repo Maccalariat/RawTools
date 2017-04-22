@@ -1,3 +1,4 @@
+
 #include "RawToolsImpl.hpp"
 
 RawTools::RawTools() : pImpl(std::make_unique<RawToolsImpl>()) {
@@ -60,18 +61,17 @@ void RawTools::RawToolsImpl::getBeyer() {
 
     uint32_t val;
     uint16_t max, min, imax, imin, sh;
-    const std::vector<uint8_t> offsets = {19, 12, 5, 22, 15, 8, 1, 18, 11, 4, 20, 13, 7};
-    std::vector<uint16_t> chunkV(32, 0);
-    std::vector<uint16_t> valueD(14, 0);
+    std::vector<uint16_t> valueC(13);
+
     // walk through the filebuffer in 32-byte chunks and interleave
     // them into the output vector
     // ignore rows/columns since the algorithm is cfa agnostic
 
-    size_t bmIndex = 0;
-    for (auto chunk = _fileMetaData->raw_ifd.offset;
-         chunk <= _fileMetaData->raw_ifd.offset + _fileMetaData->raw_ifd.stripByteCount;
-         chunk += 16) {
+    size_t bmIndex = 0;             // index into beyerMatrix
 
+    for (auto chunk = _fileMetaData->raw_ifd.offset;
+         chunk < _fileMetaData->raw_ifd.offset + _fileMetaData->raw_ifd.stripByteCount - 1;
+         chunk += 16) {
         // get the first group of max/min and offsets
         val = _fileBuffer->getUint32(chunk);
         max = static_cast<uint16_t>(0x7FF & val);         // maximum value
@@ -83,43 +83,88 @@ void RawTools::RawToolsImpl::getBeyer() {
         for (sh = 0; sh < 4 && 0x80 << sh <= max - min; sh++);
         // now get the delta (7-bit) bytes
         val = _fileBuffer->getUint32(chunk + 3);
-        valueD[0] = static_cast<uint16_t>((((val >> 6) & 0x7F) << sh) + min);
-        valueD[1] = static_cast<uint16_t>((((val >> 13) & 0x7F) << sh) + min);
-        valueD[2] = static_cast<uint16_t>((((val >> 20) & 0x7F) << sh) + min);
+        valueC[0] = static_cast<uint16_t>((((val >> 6) & 0x7F) << sh) + min);
+        valueC[1] = static_cast<uint16_t>((((val >> 13) & 0x7F) << sh) + min);
+        valueC[2] = static_cast<uint16_t>((((val >> 20) & 0x7F) << sh) + min);
         val = _fileBuffer->getUint32(chunk + 6);
-        valueD[3] = static_cast<uint16_t>((((val >> 3) & 0x7F) << sh) + min);
-        valueD[4] = static_cast<uint16_t>((((val >> 10) & 0x7F) << sh) + min);
-        valueD[5] = static_cast<uint16_t>((((val >> 17) & 0x7F) << sh) + min);
-        valueD[6] = static_cast<uint16_t>((((val >> 24) & 0x7F) << sh) + min);
+        valueC[3] = static_cast<uint16_t>((((val >> 3) & 0x7F) << sh) + min);
+        valueC[4] = static_cast<uint16_t>((((val >> 10) & 0x7F) << sh) + min);
+        valueC[5] = static_cast<uint16_t>((((val >> 17) & 0x7F) << sh) + min);
+        valueC[6] = static_cast<uint16_t>((((val >> 24) & 0x7F) << sh) + min);
         val = _fileBuffer->getUint32(chunk + 9);
-        valueD[7] = static_cast<uint16_t>((((val >> 7) & 0x7F) << sh) + min);
-        valueD[8] = static_cast<uint16_t>((((val >> 14) & 0x7F) << sh) + min);
-        valueD[9] = static_cast<uint16_t>((((val >> 21) & 0x7F) << sh) + min);
+        valueC[7] = static_cast<uint16_t>((((val >> 7) & 0x7F) << sh) + min);
+        valueC[8] = static_cast<uint16_t>((((val >> 14) & 0x7F) << sh) + min);
+        valueC[9] = static_cast<uint16_t>((((val >> 21) & 0x7F) << sh) + min);
         val = _fileBuffer->getUint32(chunk + 12);
-        valueD[10] = static_cast<uint16_t>((((val >> 4) & 0x7F) << sh) + min);
-        valueD[11] = static_cast<uint16_t>((((val >> 11) & 0x7F) << sh) + min);
-        valueD[12] = static_cast<uint16_t>((((val >> 18) & 0x7F) << sh) + min);
-        valueD[13] = static_cast<uint16_t>((((val >> 1) & 0x7F) << sh) + min);
+        valueC[10] = static_cast<uint16_t>((((val >> 4) & 0x7F) << sh) + min);
+        valueC[11] = static_cast<uint16_t>((((val >> 11) & 0x7F) << sh) + min);
+        valueC[12] = static_cast<uint16_t>((((val >> 18) & 0x7F) << sh) + min);
+        valueC[13] = static_cast<uint16_t>((((val >> 1) & 0x7F) << sh) + min);
 
         //) we've got the Delta bytes, now merge them into the final vector
-        for (size_t i, ioffset = 0; i < 16; ++i) {
+        for (size_t i = 0, io = 0; i < 16; ++i) {
             if ((i == imax) | (i == imin)) {
                 if (i == imax) {
-                    beyerMatrix[i + ioffset] = max;
-                    ++ioffset;
+                    beyerMatrix[bmIndex] = max;
                 } else {
-                    beyerMatrix[i + ioffset] = min;
-                    ++ioffset;
+                    beyerMatrix[bmIndex] = min;
                 }
             } else {
-                beyerMatrix[i + ioffset] = valueD[i];
+                beyerMatrix[bmIndex] = valueC[io];
+                ++io;
+            }
+            bmIndex += 2;
+        }
+        bmIndex = bmIndex - 31;
+        // get the second group of max/min and offsets
+        if (chunk < _fileMetaData->raw_ifd.offset + _fileMetaData->raw_ifd.stripByteCount -1) {
+            chunk += 16;
+            val = _fileBuffer->getUint32(chunk);
+            max = static_cast<uint16_t>(0x7FF & val);         // maximum value
+            min = static_cast<uint16_t>(0x7FF & (val >> 11)); // minimum value
+            imax = static_cast<uint16_t>(0x0F & (val >> 22));
+            imin = static_cast<uint16_t>(0x0F & (val >> 26));
+            // calculate the scale factor. (next largest power of 2)
+            //TODO figure this code out
+            for (sh = 0; sh < 4 && 0x80 << sh <= max - min; sh++);
+            // now get the delta (7-bit) bytes
+            val = _fileBuffer->getUint32(chunk + 3);
+            valueC[0] = static_cast<uint16_t>((((val >> 6) & 0x7F) << sh) + min);
+            valueC[1] = static_cast<uint16_t>((((val >> 13) & 0x7F) << sh) + min);
+            valueC[2] = static_cast<uint16_t>((((val >> 20) & 0x7F) << sh) + min);
+            val = _fileBuffer->getUint32(chunk + 6);
+            valueC[3] = static_cast<uint16_t>((((val >> 3) & 0x7F) << sh) + min);
+            valueC[4] = static_cast<uint16_t>((((val >> 10) & 0x7F) << sh) + min);
+            valueC[5] = static_cast<uint16_t>((((val >> 17) & 0x7F) << sh) + min);
+            valueC[6] = static_cast<uint16_t>((((val >> 24) & 0x7F) << sh) + min);
+            val = _fileBuffer->getUint32(chunk + 9);
+            valueC[7] = static_cast<uint16_t>((((val >> 7) & 0x7F) << sh) + min);
+            valueC[8] = static_cast<uint16_t>((((val >> 14) & 0x7F) << sh) + min);
+            valueC[9] = static_cast<uint16_t>((((val >> 21) & 0x7F) << sh) + min);
+            val = _fileBuffer->getUint32(chunk + 12);
+            valueC[10] = static_cast<uint16_t>((((val >> 4) & 0x7F) << sh) + min);
+            valueC[11] = static_cast<uint16_t>((((val >> 11) & 0x7F) << sh) + min);
+            valueC[12] = static_cast<uint16_t>((((val >> 18) & 0x7F) << sh) + min);
+            valueC[13] = static_cast<uint16_t>((((val >> 1) & 0x7F) << sh) + min);
+
+            //) we've got the Delta bytes, now merge them into the final vector
+            for (size_t i = 0, io = 0; i < 16; ++i) {
+                if ((i == imax) | (i == imin)) {
+                    if (i == imax) {
+                        beyerMatrix[bmIndex] = max;
+                    } else {
+                        beyerMatrix[bmIndex] = min;
+                    }
+                } else {
+                    beyerMatrix[bmIndex] = valueC[io];
+                    ++io;
+                }
+                bmIndex += 2;
             }
         }
     }
-
     std::cout << "processed beyer" << std::endl;
 }
-
 
 void RawTools::RawToolsImpl::getInterpolated() {
 }
@@ -129,7 +174,7 @@ void RawTools::RawToolsImpl::getPostProcesed() {
 
 void RawTools::RawToolsImpl::writeFile(const std::string &fileName) {
     auto tiff_file = std::make_unique<TiffFile>(fileName, *_fileMetaData);
-    tiff_file->write_file();
+    tiff_file->write_file(beyerMatrix);
 }
 
 void RawTools::RawToolsImpl::close_file() {
