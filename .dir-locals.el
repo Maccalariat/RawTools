@@ -3,21 +3,18 @@
   nil . (
 		 (tab-width . 4)
 		 (indent-tab-mode . t)
-		 
+		 (projectile-project-name "RawTools")		 
 		 )
 	  )
  
- (c++-(message "message" format-args)ode . (
-											(c-basic-offset . 4)
-											(tab-width . 4)
+ (c++-mode . (
+			  (c-basic-offset . 4)
+			  (tab-width . 4)
 			  (indent-tabs-mode . t)
 			  (eval (lambda ()
-					  (if (eq system-type 'windows-nt)
-						  (setq compile-command (concat "mingw32-make -C e:/projects/CPP/RawTools/build -j" my-cores))
-						(setq compile command "make -C ~/projects/Cpp/RawTools/build -j" my-cores)
-						)
-					  )
-					)
+					  (setq my-cores (numcores))
+					  (setq compile-command (concat "cmake --build " (projectile-project-root) "build-debug --config Debug -- -j" (number-to-string my-cores)))))
+			  
 			  (company-clang-arguments . ("-std=c++14"
 										  "-fno-ms-compatibility"
 										  "-IE:/projects/cpp/RawTools/RawToolsLib/include"
