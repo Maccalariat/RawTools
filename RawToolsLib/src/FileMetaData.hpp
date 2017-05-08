@@ -19,17 +19,18 @@ private:
     struct tiff_ifd_s {
         size_t file_offset = 0;
         uint16_t ifd_type = 0;
-        uint32_t width = 0;
-        uint32_t height = 0;
-        int bps = 0;
-        int comp = 0;
-        int phint = 0;
+        uint32_t ImageWidth = 0;
+        uint32_t ImageHeight = 0;
+        uint16_t BitsPerSample = 0;
+        uint16_t Compression = 0;
+        uint16_t PhotometricInterpretation = 0;
         size_t offset = 0;
-        int flip = 0;
-        int samples = 0;
+        uint16_t Orientation = 0;
+        uint16_t SamplesPerPixel = 0;
+        uint16_t PlanarConfiguration = 0;
         uint32_t stripByteCount = 0;
-        int tile_width = 0;
-        int tile_length = 0;
+        uint16_t tile_width = 0;
+        uint16_t tile_length = 0;
         float shutter = 0;
         uint32_t sonyRawFileType = 0;
         uint32_t rowsPerStrip = 0;

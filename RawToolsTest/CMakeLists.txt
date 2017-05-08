@@ -1,5 +1,5 @@
 # RawToolsTest
-cmake_minimum_required(VERSION 3.7 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.6 FATAL_ERROR)
 
 message("cmake - RawToolsTest")
 
@@ -19,10 +19,11 @@ include_directories(${CMAKE_SOURCE_DIR}/libRawToolsLib)
 target_link_libraries(RawToolsTest RawToolsLib)
 
 set_target_properties(RawToolsTest PROPERTIES
-  CXX_STANDARD 14
-  CXX_STANDARD_REQUIRED YES
-  CXX_EXTENSIONS NO
-  )
+        CXX_STANDARD 14
+        CXX_STANDARD_REQUIRED YES
+        CXX_EXTENSIONS NO
+        COMPILE_OPTIONS "-Wall" "-Wextra" "-Wconversion"
+        )
 
 
 install(TARGETS RawToolsTest
