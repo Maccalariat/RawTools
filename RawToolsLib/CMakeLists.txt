@@ -8,17 +8,6 @@ project(RawToolsLib CXX)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # LIBTIFF
-link_directories("${MY_BUILDS_PATH}/lib")
-include_directories("${MY_BUILDS_PATH}/include")
-find_library(TIFFLIB libtiff.a
-        HINTS "${MY_BUILDS_PATH}/lib")
-find_library(JPEGLIB libjpeg.a
-        HINTS "${MY_BUILDS_PATH}/lib")
-find_library(LIBZLIB libzlibstatic.a
-        HINTS "${MY_BUILDS_PATH}/lib")
-find_library(LIBLZMA liblzma.a
-        HINTS "${MY_BUILDS_PATH}/lib")
-
 add_library(RawToolsLib SHARED
         include/RawTools.hpp
         src/FileBuffer.cpp
@@ -34,7 +23,7 @@ add_library(RawToolsLib SHARED
         src/TiffFile.cpp
         src/TiffFile.hpp)
 # target_link_libraries is fucking positional! it MUST be after add-library
-target_link_libraries(RawToolsLib ${TIFFLIB} ${JPEGLIB} ${LIBZLIB} ${LIBLZMA})
+target_link_libraries(RawToolsLib )
 
 set_target_properties(RawToolsLib PROPERTIES
         CXX_STANDARD 14

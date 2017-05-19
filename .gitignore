@@ -43,3 +43,4 @@ cmake*/
 *.pidb
 *.svclog
 *.scc
+/Default/

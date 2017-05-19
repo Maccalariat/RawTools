@@ -4,7 +4,9 @@
 
 #include "TiffFile.hpp"
 
-TiffFile::TiffFile(const std::string &fileName, const FileMetaData &metadata, const std::vector<uint16_t> &imageVector)
+TiffFile::TiffFile(const std::string &fileName,
+                   const FileMetaData &metadata,
+                   const std::vector<uint16_t> &imageVector)
         : metaData(metadata),
           tagVector(4, 0),
           imageData(imageVector) {
@@ -42,23 +44,22 @@ void TiffFile::write_file() {
     writeTag(SubfileTypeTag, LONG, ONE, ZERO);
     writeTag(ImageWidthTag, SHORT, ONE, metaData.raw_ifd.ImageWidth);
     writeTag(ImageLengthTag, SHORT, ONE, metaData.raw_ifd.ImageHeight);
-    writeTag(BitsPerSampleTag, SHORT, ONE, 16);
-    // writeTag(BitsPerSampleTag, SHORT, THREE, dataOffset);
-    // dataOffset += (sizeof(uint16_t) * 3);
+    // writeTag(BitsPerSampleTag, SHORT, ONE, 16);
+    writeTag(BitsPerSampleTag, SHORT, THREE, dataOffset);
+    dataOffset += (sizeof(uint16_t) * 3);
     writeTag(XResolutionTag, RATIONAL, ONE, dataOffset);
     dataOffset += (sizeof(valueUint32T) * 2);
     writeTag(YResolutionTag, RATIONAL, ONE, dataOffset);
     dataOffset += (sizeof(valueUint32T) * 2);
-    //writeTag(PlanarConfigurationTag, SHORT, ONE, ONE);
+    writeTag(PlanarConfigurationTag, SHORT, ONE, ONE);
     writeTag(ResolutionUnitTag, SHORT, ONE, TWO);
     writeTag(CompressionTag, SHORT, ONE, ONE); // force uncompressed right now
     writeTag(PhotometricInterpretationTag, SHORT, ONE, TWO);
     writeTag(StripOffsetsTag, SHORT, ONE, dataOffset);
     writeTag(OrientationTag, SHORT, ONE, 8);
-    writeTag(SamplesPerPixelTag, SHORT, ONE, ONE);
+    writeTag(SamplesPerPixelTag, SHORT, ONE, THREE);
     writeTag(RowsPerStripTag, LONG, ONE, metaData.raw_ifd.ImageHeight);
-// NOTE: count is fudged, since I have not done RGB interpolation
-    writeTag(StripByteCountsTag, LONG, ONE, sizeof(imageData[0]) * imageData.size());
+    writeTag(StripByteCountsTag, LONG, ONE, metaData.raw_ifd.ImageWidth * metaData.raw_ifd.ImageHeight * 6);
 // four bytes of zero to end the IFD
     valueUint32T = 0;
     outputFile->write(reinterpret_cast<const char *>(&valueUint32T), sizeof(valueUint32T));
@@ -79,23 +80,8 @@ void TiffFile::write_file() {
     outputFile->write(reinterpret_cast<const char *>(&valueUint32T), sizeof(valueUint32T));
 // now the image data
 
-    /*
-// THIS IS A HACK OF PLANAR CONFIGURATION = RGB data - image will look smeared
-    for (auto item : imageData) {
-        outputFile->write(reinterpret_cast<const char *>(&item), 2); // RED
-        outputFile->write(reinterpret_cast<const char *>(&item), 2); // GREEN
-        outputFile->write(reinterpret_cast<const char *>(&item), 2); // BLUE
-    }
-*/
-// vector<double&vec2 = reinterpret_cast<vector<double>&>(float_vect);
-
-// TODO: determine if written bytes need to be endian.
-/* for (auto item : imageData) {
-    auto sItem = swap16(item);
-    outputFile->write(reinterpret_cast<const char *>(&sItem), sizeof(item));
-}
-*/
-   outputFile->write(reinterpret_cast<const char *>(&imageData[0]), sizeof(imageData[0]) * imageData.size());
+    outputFile->write(reinterpret_cast<const char *>(&imageData[0]),
+                      metaData.raw_ifd.ImageWidth * metaData.raw_ifd.ImageHeight * 6);
 
     close_file();
 

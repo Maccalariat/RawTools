@@ -13,13 +13,13 @@ int main(int argc, char *argv[]) {
     std::string fn(argv[1]);
     std::cout << "supplied file : " << argv[1] << std::endl;
      */
-    std::string fn("E:\\projects\\CPP\\RawTools\\sony1.ARW");
+    std::string fn("E:\\projects\\CPP\\RawTools\\sony2.ARW");
     RawTools *rt = new RawTools();
     rt->setFile(fn);
     rt->parseMetaData();
     auto bm = rt->getBeyer();
-    rt->getInterpolated(0, bm);
-    rt->writeFile("sony1.tiff");
+    auto image = rt->getInterpolated(0, bm);
+    rt->writeFile("sony2.tiff", image);
     rt->close_file();
 	
 }

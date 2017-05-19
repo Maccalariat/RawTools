@@ -28,7 +28,7 @@ public:
 
     void getPostProcessed();
 
-    void writeFile(const std::string &fileName);
+    void writeFile(const std::string &fileName, const std::vector<uint16_t> &image);
 
     void close_file();
 
@@ -48,6 +48,7 @@ public:
     void nearest_neighbour(std::vector<uint16_t> &image);
 
 
+    void createGamma(double d);
 };
 
 #endif // PROJECT__RAWTOOLS_H_H

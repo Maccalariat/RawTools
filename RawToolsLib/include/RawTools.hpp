@@ -4,6 +4,8 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <limits>
+#include <algorithm>
 
 /// the public API for RawTools
 /// This is a 'primitive' collection of atomic api calls on an unsuspecting raw
@@ -33,13 +35,16 @@ public:
 
     void getPostProcesed();
 
-    void writeFile(const std::string &fileName);
+    void writeFile(const std::string &fileName, const std::vector<uint16_t> &image);
 
     void close_file();
 
 private:
     class RawToolsImpl; // forward declaration
     std::unique_ptr<RawToolsImpl> pImpl;
+
+    const float gammaCorrection = 1 / 1.8;
+    static std::vector<uint16_t>gammaTable;
 };
 
 #endif // PROJECT_RAWTOOLS_H_H

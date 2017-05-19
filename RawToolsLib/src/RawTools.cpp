@@ -17,15 +17,15 @@ void RawTools::setFile(std::string &fileName) { pImpl->setFile(fileName); }
 
 void RawTools::parseMetaData() { pImpl->parseMetaData(); }
 
-std::vector<uint16_t> RawTools::getBeyer() { pImpl->getBeyer(); }
+std::vector<uint16_t> RawTools::getBeyer() { return pImpl->getBeyer(); }
 
-void RawTools::writeFile(const std::string &fileName) {
-    pImpl->writeFile(fileName);
+void RawTools::writeFile(const std::string &fileName, const std::vector<uint16_t> &image) {
+    pImpl->writeFile(fileName, image);
 }
 
 void RawTools::close_file() { pImpl->close_file(); }
 
-std::vector <uint16_t> RawTools::getInterpolated(const int pattern, const std::vector <uint16_t> &inputImage) {
+std::vector<uint16_t> RawTools::getInterpolated(const int pattern, const std::vector<uint16_t> &inputImage) {
     return pImpl->getInterpolated(pattern, inputImage);
 }
 
@@ -36,7 +36,9 @@ void RawTools::getPostProcesed() {
 ///////////////////////////////////////////////////////////////////////////////
 // Implementation Definitions
 ///////////////////////////////////////////////////////////////////////////////
-RawTools::RawToolsImpl::RawToolsImpl() {}
+RawTools::RawToolsImpl::RawToolsImpl() {
+    createGamma(1.8);
+}
 
 void RawTools::RawToolsImpl::setFile(std::string &fileName) {
     _fileName = fileName;
@@ -70,6 +72,7 @@ std::vector<uint16_t> RawTools::RawToolsImpl::getBeyer() {
 
     while (bmIndex <= beyerMatrix.size() - 1) {
         // get the first group of max/min and offsets
+        // 255 * (Red(colour)   / 255) ^ gammaCorrection
         val = _fileBuffer->getUint32(chunk);
         max = static_cast<uint16_t>(0x7FF & val);         // maximum value
         min = static_cast<uint16_t>(0x7FF & (val >> 11)); // minimum value
@@ -162,15 +165,15 @@ std::vector<uint16_t> RawTools::RawToolsImpl::getBeyer() {
 }
 
 std::vector<uint16_t> RawTools::RawToolsImpl::getInterpolated(const int pattern,
-                                                              const std::vector <uint16_t> &inputImage) {
+                                                              const std::vector<uint16_t> &inputImage) {
     // basic interpolation to drive the process.
     // get smarter later
     auto image = std::vector<uint16_t>();
     if (pattern == 0) {
 
     }
-    if (pattern == 1) { // nearest neighbour
-        image.resize(inputImage.size() * 3);
+    if (pattern == 0) { // nearest neighbour
+        image.resize(inputImage.size() * 3 * 2);
         nearest_neighbour(image);
     }
     return image;
@@ -180,8 +183,8 @@ void RawTools::RawToolsImpl::getPostProcessed() {
     return;
 }
 
-void RawTools::RawToolsImpl::writeFile(const std::string &fileName) {
-    auto tiff_file = std::make_unique<TiffFile>(fileName, *_fileMetaData, beyerMatrix);
+void RawTools::RawToolsImpl::writeFile(const std::string &fileName, const std::vector<uint16_t> &image) {
+    auto tiff_file = std::make_unique<TiffFile>(fileName, *_fileMetaData, image);
     tiff_file->write_file();
 }
 
@@ -192,23 +195,68 @@ void RawTools::RawToolsImpl::log(const std::string message) {
 }
 
 void
-RawTools::RawToolsImpl::nearest_neighbour(std::vector <uint16_t> &image) {
+RawTools::RawToolsImpl::nearest_neighbour(std::vector<uint16_t> &image) {
     // my simple first-implementation of nearest neighbour demosaicing.
-    // I assume an GB
-    //             RG input matrix pattern
+    // I assume an GBG
+    //             RGR input matrix pattern
     // And produce a RGB triplet output array
-    auto rows = _fileMetaData->raw_ifd.ImageHeight;
-    auto columns = _fileMetaData->raw_ifd.ImageWidth;
-    for (auto rowI = 0; rowI < rows; rowI++) {
-        if (rowI & 0x1) { // even rows -> GBGBGB
-            for (auto columnI = 0; columnI < columns; columnI++) {
-                if (columnI & 0x1) { //even column == Green Pixel
 
-                }
+    // process the beyerMatix to gamma-scale it into GBeyerMatrix
+    std::vector<uint16_t> GbeyerMatrix(beyerMatrix);
+    for (size_t i = 0; i < GbeyerMatrix.size(); i++) {
+        GbeyerMatrix[i] = gammaTable[GbeyerMatrix[i]];
+    }
+    auto rowCount = _fileMetaData->raw_ifd.ImageHeight;
+    auto columnCount = _fileMetaData->raw_ifd.ImageWidth;
+    size_t byteswritten = 0;
+    size_t imagePos = 0;
+    for (uint32_t row = 0; row < rowCount; row++) {
+        auto cRow = row * columnCount;
+        if (row & 0x1) { // odd rowCount -> RGRGRG
+            for (uint32_t pos = cRow; pos < cRow + columnCount;) {
+                auto prevRow = pos - columnCount;
+                //std::cout << std::endl;
+                //std::cout << row << " , " << column;
+                //std::cout << " R";
+                image.at(imagePos++) = GbeyerMatrix.at(pos);        // R
+                image.at(imagePos++) = GbeyerMatrix.at(pos + 1);        // G
+                image.at(imagePos++) = GbeyerMatrix.at(prevRow + 1);    // B
+                //std::cout << " G";
+                pos++;
+                image.at(imagePos++) = GbeyerMatrix.at(pos - 1);  // R
+                image.at(imagePos++) = GbeyerMatrix.at(pos);        // G
+                image.at(imagePos++) = GbeyerMatrix.at(prevRow + 1);    // B
+                pos++;
+                byteswritten += 12;
             }
-        } else { // odd rows -> RGRGRG
-
+        } else { // even rowCount -> GBGBGB
+            for (uint32_t pos = cRow; pos < cRow + columnCount;) {
+                auto nextRow = pos + columnCount;
+                image.at(imagePos++) = GbeyerMatrix.at(nextRow);     // R
+                image.at(imagePos++) = GbeyerMatrix.at(pos);     // G
+                image.at(imagePos++) = GbeyerMatrix.at(pos + 1); // B
+                pos++;
+                // next pixel "B"
+                image.at(imagePos++) = GbeyerMatrix.at(nextRow);    // R
+                image.at(imagePos++) = GbeyerMatrix.at(pos - 1);        // G
+                image.at(imagePos++) = GbeyerMatrix.at(pos);    // B
+                pos++;
+                byteswritten += 12;
+            }
         }
     }
-
+    std::cout << "image byte size = " << byteswritten << std::endl;
+    std::cout << "image buffer size = " << image.size() << std::endl;
 }
+
+void RawTools::RawToolsImpl::createGamma(double d) {
+    // do the gamma calculations
+    const double gammaCorrection = 1 / d;
+    const uint16_t mVal = std::numeric_limits<uint16_t>::max();
+    gammaTable.resize(std::numeric_limits<uint16_t>::max());
+    for (auto i = 0; i < mVal; i++) {
+        gammaTable[i] = pow(mVal * (i / mVal), gammaCorrection);
+    }
+}
+
+

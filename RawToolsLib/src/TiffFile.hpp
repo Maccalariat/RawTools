@@ -9,8 +9,6 @@
 #include <ostream>
 #include <vector>
 #include "FileMetaData.hpp"
-#include "tiff.h"
-#include "tiffio.h"
 
 class TiffFile {
 public:
@@ -34,7 +32,7 @@ public:
 private:
     const uint16_t magic_number = 42;
     const uint32_t first_offset = 8;
-    const uint16_t de_count = 14;
+    const uint16_t de_count = 15;
     const uint16_t SubfileTypeTag = 0x0FE;
     const uint16_t ImageWidthTag = 0x100;
     const uint16_t ImageLengthTag = 0x101;
